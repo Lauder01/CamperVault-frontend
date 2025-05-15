@@ -12,7 +12,7 @@ const Map = () => {
     if (!mapContainerRef.current) return;
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/standard-satellite',
+      style: 'mapbox://styles/mapbox/satellite-streets-v12',
       center: [137.915, 36.259],
       zoom: 9
     });
