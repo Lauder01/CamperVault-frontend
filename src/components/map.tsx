@@ -6,10 +6,11 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibGF1ZGVyIiwiYSI6ImNtYXBrZWlubDBoOHcya3MzcnlpZ
 
 const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<mapboxgl.Map | null>(null);
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
-    const map = new mapboxgl.Map({
+    mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: {
         version: 8,
@@ -20,7 +21,9 @@ const Map = () => {
               'https://www.ign.es/wmts/ortofoto?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=OI.OrthoimageCoverage&STYLE=default&FORMAT=image/jpeg&TILEMATRIXSET=GoogleMapsCompatible&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}'
             ],
             tileSize: 256,
-            attribution: '© Instituto Geográfico Nacional de España'
+            attribution: '© Instituto Geográfico Nacional de España',
+            minzoom: 6,
+            maxzoom: 19
           }
         },
         layers: [
@@ -28,25 +31,28 @@ const Map = () => {
             id: 'ign-ortofoto',
             type: 'raster',
             source: 'ign-ortofoto',
-            minzoom: 0,
+            minzoom: 6,
             maxzoom: 19
           }
         ]
       },
       center: [-3.7038, 40.4168], // Madrid
-      zoom: 12,
+      zoom: 10,
       maxZoom: 19
     });
 
-    window.addEventListener('resize', () => {
-      map.resize();
-    });
+    const handleResize = () => {
+      if (mapRef.current) mapRef.current.resize();
+    };
+
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      map.remove();
-      window.removeEventListener('resize', () => {
-        map.resize();
-      });
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
