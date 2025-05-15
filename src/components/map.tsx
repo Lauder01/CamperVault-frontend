@@ -23,7 +23,7 @@ const Map = () => {
             tileSize: 256,
             attribution: '© Instituto Geográfico Nacional de España',
             minzoom: 6,
-            maxzoom: 19
+            maxzoom: 21
           }
         },
         layers: [
@@ -32,13 +32,13 @@ const Map = () => {
             type: 'raster',
             source: 'ign-ortofoto',
             minzoom: 6,
-            maxzoom: 19
+            maxzoom: 21
           }
         ]
       },
       center: [-3.7038, 40.4168], // Madrid
       zoom: 10,
-      maxZoom: 19
+      maxZoom: 21
     });
 
     const handleResize = () => {
