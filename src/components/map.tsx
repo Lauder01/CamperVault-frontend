@@ -8,7 +8,6 @@ import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import { get as getProjection } from 'ol/proj';
 import { register } from 'ol/proj/proj4';
 import proj4 from 'proj4';
-import OSM from 'ol/source/OSM';
 
 // REGISTRA EPSG:25830
 proj4.defs(
@@ -18,15 +17,15 @@ proj4.defs(
 register(proj4);
 
 const projection = getProjection('EPSG:25830');
-const extent = [482000, 4640000, 700000, 4820000]; // Extensión aproximada de Navarra en EPSG:25830
+const extent = [480408, 4599748, 742552, 4861892]; // Extensión real de Navarra según capabilities
 
 const tileGrid = new WMTSTileGrid({
-  origin: [extent[0], extent[3]],
+  origin: [480408, 4861892], // TopLeftCorner del capabilities
   resolutions: [
-    4891.96981025128, 2445.98490512564, 1222.99245256282, 611.49622628141,
-    305.748113140705, 152.8740565703525, 76.43702828517625, 38.21851414258813,
-    19.109257071294063, 9.554628535647032, 4.777314267823516, 2.388657133911758,
-    1.194328566955879, 0.5971642834779395, 0.29858214173896974, 0.14929107086948487
+    3657142.8571428573, 1828571.4285714286, 914285.7142857143, 457142.85714285716,
+    228571.42857142858, 114285.71428571429, 57142.857142857145, 28571.428571428572,
+    14285.714285714286, 7142.857142857143, 3571.4285714285716, 1785.7142857142858,
+    892.8571428571429, 446.42857142857144, 223.21428571428572, 111.60714285714286
   ],
   matrixIds: [
     '0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15'
@@ -46,7 +45,18 @@ const OpenLayersMap = () => {
       target: mapContainerRef.current,
       layers: [
         new TileLayer({
-          source: new OSM(),
+          source: new WMTS({
+            url: 'https://idena.navarra.es/ogc/wmts/ortofoto2024/default/epsg25830deep/{TileMatrix}/{TileRow}/{TileCol}.jpeg',
+            layer: 'ortofoto2024',
+            matrixSet: 'epsg25830deep',
+            format: 'image/jpeg',
+            projection: projection!,
+            tileGrid: tileGrid,
+            style: 'default',
+            attributions: '© Gobierno de Navarra',
+            crossOrigin: 'anonymous',
+            requestEncoding: 'REST',
+          }),
         }),
       ],
       view: new View({
@@ -76,7 +86,7 @@ const OpenLayersMap = () => {
         width: '100vw',
         height: 'calc(100vh - 60px)',
         minHeight: 400,
-        position: 'relative', // Cambiado de absolute a relative
+        position: 'relative',
         top: 0,
         left: 0,
         right: 0,
