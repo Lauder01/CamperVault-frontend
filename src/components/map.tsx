@@ -6,32 +6,46 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibGF1ZGVyIiwiYSI6ImNtYXBrZWlubDBoOHcya3MzcnlpZ
 
 const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<mapboxgl.Map | null>(null);
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
-    mapRef.current = new mapboxgl.Map({
+    const map = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/satellite-streets-v12',
-      center: [137.915, 36.259],
-      zoom: 9
-    });
-
-    mapRef.current.on('style.load', () => {
-      mapRef.current!.setFog({});
-      mapRef.current!.resize();
+      style: {
+        version: 8,
+        sources: {
+          'ign-ortofoto': {
+            type: 'raster',
+            tiles: [
+              'https://www.ign.es/wmts/ortofoto?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=OI.OrthoimageCoverage&STYLE=default&FORMAT=image/jpeg&TILEMATRIXSET=GoogleMapsCompatible&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}'
+            ],
+            tileSize: 256,
+            attribution: '© Instituto Geográfico Nacional de España'
+          }
+        },
+        layers: [
+          {
+            id: 'ign-ortofoto',
+            type: 'raster',
+            source: 'ign-ortofoto',
+            minzoom: 0,
+            maxzoom: 19
+          }
+        ]
+      },
+      center: [-3.7038, 40.4168],
+      zoom: 5,
+      maxZoom: 19
     });
 
     window.addEventListener('resize', () => {
-      mapRef.current && mapRef.current.resize();
+      map.resize();
     });
 
     return () => {
-      if (mapRef.current) {
-        mapRef.current.remove();
-      }
+      map.remove();
       window.removeEventListener('resize', () => {
-        mapRef.current && mapRef.current.resize();
+        map.resize();
       });
     };
   }, []);
@@ -41,9 +55,9 @@ const Map = () => {
       ref={mapContainerRef}
       style={{
         width: '100vw',
-        height: 'calc(100vh - 60px)', // Ajusta 60px si tu header es más alto o bajo
+        height: 'calc(100vh - 60px)',
         position: 'absolute',
-        top: '60px', // Ajusta según la altura de tu título/header
+        top: '60px',
         left: 0,
         right: 0,
         bottom: 0,
