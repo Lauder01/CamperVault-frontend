@@ -1,7 +1,7 @@
-import 'mapbox-gl/dist/mapbox-gl.css';
 import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 
+console.log('MAPBOX TOKEN:', process.env.NEXT_PUBLIC_MAPBOX_TOKEN);
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
 const Map = () => {
