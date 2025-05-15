@@ -33,8 +33,8 @@ const Map = () => {
           }
         ]
       },
-      center: [-3.7038, 40.4168],
-      zoom: 5,
+      center: [-3.7038, 40.4168], // Madrid
+      zoom: 12,
       maxZoom: 19
     });
 
