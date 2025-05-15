@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -7,10 +7,9 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibGF1ZGVyIiwiYSI6ImNtYXBrZWlubDBoOHcya3MzcnlpZ
 const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
-  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!visible || !mapContainerRef.current) return;
+    if (!mapContainerRef.current) return;
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/satellite-v9',
@@ -20,28 +19,36 @@ const Map = () => {
 
     mapRef.current.on('style.load', () => {
       mapRef.current!.setFog({});
+      mapRef.current!.resize();
+    });
+
+    window.addEventListener('resize', () => {
+      mapRef.current && mapRef.current.resize();
     });
 
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
       }
+      window.removeEventListener('resize', () => {
+        mapRef.current && mapRef.current.resize();
+      });
     };
-  }, [visible]);
-
-  useEffect(() => {
-    if (visible && mapRef.current) {
-      mapRef.current.resize();
-    }
-  }, [visible]);
+  }, []);
 
   return (
-    <div>
-      <button onClick={() => setVisible(true)}>Mostrar mapa</button>
-      {visible && (
-        <div ref={mapContainerRef} style={{ width: '100%', height: '400px' }} />
-      )}
-    </div>
+    <div
+      ref={mapContainerRef}
+      style={{
+        width: '100vw',
+        height: 'calc(100vh - 60px)', // Ajusta 60px si tu header es más alto o bajo
+        position: 'absolute',
+        top: '60px', // Ajusta según la altura de tu título/header
+        left: 0,
+        right: 0,
+        bottom: 0,
+      }}
+    />
   );
 };
 
