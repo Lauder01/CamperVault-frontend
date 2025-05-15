@@ -8,6 +8,7 @@ import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import { get as getProjection } from 'ol/proj';
 import { register } from 'ol/proj/proj4';
 import proj4 from 'proj4';
+import OSM from 'ol/source/OSM';
 
 // REGISTRA EPSG:25830
 proj4.defs(
@@ -45,17 +46,7 @@ const OpenLayersMap = () => {
       target: mapContainerRef.current,
       layers: [
         new TileLayer({
-          source: new WMTS({
-            url: 'https://idena.navarra.es/ogc/wmts/ortofoto2024?',
-            layer: 'ortofoto2024',
-            matrixSet: 'EPSG:25830',
-            format: 'image/jpeg',
-            projection: projection!,
-            tileGrid: tileGrid,
-            style: 'default',
-            attributions: '© Gobierno de Navarra',
-            crossOrigin: 'anonymous',
-          }),
+          source: new OSM(),
         }),
       ],
       view: new View({
@@ -84,8 +75,9 @@ const OpenLayersMap = () => {
       style={{
         width: '100vw',
         height: 'calc(100vh - 60px)',
-        position: 'absolute',
-        top: '60px',
+        minHeight: 400,
+        position: 'relative', // Cambiado de absolute a relative
+        top: 0,
         left: 0,
         right: 0,
         bottom: 0,
