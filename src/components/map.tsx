@@ -6,6 +6,15 @@ import TileLayer from 'ol/layer/Tile';
 import WMTS from 'ol/source/WMTS';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import { get as getProjection } from 'ol/proj';
+import { register } from 'ol/proj/proj4';
+import proj4 from 'proj4';
+
+// REGISTRA EPSG:25830
+proj4.defs(
+  'EPSG:25830',
+  '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs +type=crs'
+);
+register(proj4);
 
 const projection = getProjection('EPSG:25830');
 const extent = [482000, 4640000, 700000, 4820000]; // Extensión aproximada de Navarra en EPSG:25830
