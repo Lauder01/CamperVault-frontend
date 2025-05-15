@@ -18,7 +18,7 @@ const Map = () => {
           'ign-ortofoto': {
             type: 'raster',
             tiles: [
-              'https://www.ign.es/wmts/ortofoto?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=OI.OrthoimageCoverage&STYLE=default&FORMAT=image/jpeg&TILEMATRIXSET=GoogleMapsCompatible&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}'
+              'https://www.ign.es/wmts/pnoa-ma?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=OI.OrthoimageCoverage&STYLE=default&FORMAT=image/jpeg&TILEMATRIXSET=GoogleMapsCompatible&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}'
             ],
             tileSize: 256,
             attribution: '© Instituto Geográfico Nacional de España',
