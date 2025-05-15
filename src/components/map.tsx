@@ -12,47 +12,27 @@ const Map = () => {
     if (!mapContainerRef.current) return;
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: {
-        version: 8,
-        sources: {
-          'ign-ortofoto': {
-            type: 'raster',
-            tiles: [
-              'https://www.ign.es/wmts/pnoa-ma?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=OI.OrthoimageCoverage&STYLE=default&FORMAT=image/jpeg&TILEMATRIXSET=GoogleMapsCompatible&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}'
-            ],
-            tileSize: 256,
-            attribution: '© Instituto Geográfico Nacional de España',
-            minzoom: 6,
-            maxzoom: 21
-          }
-        },
-        layers: [
-          {
-            id: 'ign-ortofoto',
-            type: 'raster',
-            source: 'ign-ortofoto',
-            minzoom: 6,
-            maxzoom: 21
-          }
-        ]
-      },
-      center: [-3.7038, 40.4168], // Madrid
-      zoom: 10,
-      maxZoom: 21
+      style: 'mapbox://styles/mapbox/satellite-streets-v12',
+      center: [137.915, 36.259],
+      zoom: 9
     });
 
-    const handleResize = () => {
-      if (mapRef.current) mapRef.current.resize();
-    };
+    mapRef.current.on('style.load', () => {
+      mapRef.current!.setFog({});
+      mapRef.current!.resize();
+    });
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', () => {
+      mapRef.current && mapRef.current.resize();
+    });
 
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
-        mapRef.current = null;
       }
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', () => {
+        mapRef.current && mapRef.current.resize();
+      });
     };
   }, []);
 
@@ -61,9 +41,9 @@ const Map = () => {
       ref={mapContainerRef}
       style={{
         width: '100vw',
-        height: 'calc(100vh - 60px)',
+        height: 'calc(100vh - 60px)', // Ajusta 60px si tu header es más alto o bajo
         position: 'absolute',
-        top: '60px',
+        top: '60px', // Ajusta según la altura de tu título/header
         left: 0,
         right: 0,
         bottom: 0,
